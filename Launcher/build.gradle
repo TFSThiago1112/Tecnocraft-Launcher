@@ -1,0 +1,42 @@
+def getVersion() {
+    def date = new Date()
+    def year = date.format('yyyy')
+    def month = date.format('MM')
+    def day = date.format('dd')
+    def hour = date.format('HH')
+    def minute = date.format('mm')
+    def devCycle = '0'
+    return year + '.' + devCycle + '.' + month + '' + day + '.' + hour + '' + minute
+}
+
+archivesBaseName = 'TCLauncher'
+version = getVersion()
+
+dependencies {
+	compile 'org.apache.logging.log4j:log4j-core:2.3'
+	compile 'com.google.code.gson:gson:2.3.1'
+	compile 'commons-codec:commons-codec:1.10'
+	compile 'org.apache.commons:commons-compress:1.9'
+	compile 'org.tukaani:xz:1.5'
+	compile 'org.jcraft:jorbis:0.0.17'
+	compile 'org.lwjgl.lwjgl:lwjgl:2.9.3'
+	compile 'org.slick2d:slick2d-core:1.0.1'
+}
+
+jar {
+	from {
+        configurations.compile.collect {
+            return it.isDirectory() ? it : zipTree(it).matching { 
+            	include '**/*.*'
+            	exclude '*.dll'
+            	exclude '*.so'
+            	exclude '*.dylib'
+            	exclude '*.jnilib'
+            } 
+        }
+    }
+	manifest {
+    	attributes("Implementation-Version": project.version)
+        attributes("Main-Class": "tk.tfsthiago1112.Tecnocraft.Launcher.start.JarStart")
+    }
+}

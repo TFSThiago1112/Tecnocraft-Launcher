@@ -1,0 +1,23 @@
+def getVersion() {
+	def date = new Date()
+	def year = date.format('yyyy')
+	def month = date.format('MM')
+	def day = date.format('dd')
+	def hour = date.format('HH')
+	def minute = date.format('mm')
+	def devCycle = '0'
+	return year + '.' + devCycle + '.' + month + '' + day + '.' + hour + '' + minute
+}
+
+archivesBaseName = 'TCBootstrapper'
+version = getVersion()
+dependencies {
+	
+}
+
+jar {
+	manifest {
+    	attributes("Implementation-Version": project.version)
+        attributes("Main-Class": "tk.tfsthiago1112.Tecnocraft.Launcher.bootstrapper.Bootstrap")
+    }
+}

@@ -1,0 +1,17 @@
+println """
+*****************************************************
+	TFSThiago1112 Software Gradle Script
+	Project: Tecnocraft Launcher
+	Output files will be in [subprojects]/build/libs
+*****************************************************
+"""
+
+subprojects {
+	apply plugin: 'java'
+	group = 'tk.tfsthiago1112.Tecnocraft'
+	repositories {
+	    mavenCentral()
+	    maven { url "http://repo.maven.apache.org/maven2" }
+	}
+
+}
