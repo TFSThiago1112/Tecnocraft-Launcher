@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Set;
 
@@ -19,133 +18,130 @@ import com.google.gson.JsonSyntaxException;
 
 public class LocalVersionList extends VersionList {
 
-	private final File baseDirectory;
+    private final File baseDirectory;
 
-	private final File baseVersionsDir;
+    private final File baseVersionsDir;
 
-	public LocalVersionList(File baseDirectory) {
-		if ((baseDirectory == null) || (!baseDirectory.isDirectory())) {
-			throw new IllegalArgumentException("Base directory is not a folder!");
-		}
+    public LocalVersionList(File baseDirectory) {
+        if ((baseDirectory == null) || (!baseDirectory.isDirectory())) {
+            throw new IllegalArgumentException("Base directory is not a folder!");
+        }
 
-		this.baseDirectory = baseDirectory;
-		this.baseVersionsDir = new File(this.baseDirectory, "versions");
-		if (!this.baseVersionsDir.isDirectory()) {
-			this.baseVersionsDir.mkdirs();
-		}
-	}
+        this.baseDirectory = baseDirectory;
+        this.baseVersionsDir = new File(this.baseDirectory, "versions");
+        if (!this.baseVersionsDir.isDirectory()) {
+            this.baseVersionsDir.mkdirs();
+        }
+    }
 
-	protected InputStream getFileInputStream(String uri) throws FileNotFoundException {
-		return new FileInputStream(new File(this.baseDirectory, uri));
-	}
+    protected InputStream getFileInputStream(String uri) throws FileNotFoundException {
+        return new FileInputStream(new File(this.baseDirectory, uri));
+    }
 
-	@Override
-	public void refreshVersions() throws IOException {
-		this.clearCache();
+    @Override
+    public void refreshVersions() throws IOException {
+        this.clearCache();
 
-		File[] files = this.baseVersionsDir.listFiles();
-		if (files == null) {
-			return;
-		}
-		
-		int remoteVersion = getRemoteIndexVersion();
+        File[] files = this.baseVersionsDir.listFiles();
+        if (files == null) {
+            return;
+        }
 
-		for (File directory : files) {
-			String id = directory.getName();
-			File jsonFile = new File(directory, id + ".json");
+        int remoteVersion = getRemoteIndexVersion();
 
-			if ((directory.isDirectory()) && (jsonFile.exists())) {
-				try {
-					if (Launcher.getInstance().getSettings().versionIndex < remoteVersion)
-					{
-						System.out.println("Deleting local version " + jsonFile.getAbsolutePath() + " because the remote server reported it's outdated.");
-						jsonFile.delete();
-					}
-					else
-					{
-						CompleteVersion version = this.gson.fromJson(this.getUrl("versions/" + id + "/" + id + ".json"), CompleteVersion.class);
-						this.addVersion(version);	
-					}
-				} catch (JsonSyntaxException ex) {
-					if (Launcher.getInstance() != null) {
-						Launcher.getInstance().println("Couldn't load local version " + jsonFile.getAbsolutePath(), ex);
-					} else {
-						throw new JsonSyntaxException("Loading file: " + jsonFile.toString(), ex);
-					}
-				}
-			}
-		}
-		
-		Launcher.getInstance().getSettings().versionIndex = remoteVersion;
-		Launcher.getInstance().getSettings().save();
-	}
-	
-	private int getRemoteIndexVersion() {
-		int remoteVersion = -1;
-		
-		try {
-			URL website = new URL("http://127.0.0.2/tecnocraft/versions/versionsIndex.txt");
-			BufferedReader br = new BufferedReader(new InputStreamReader(website.openStream(), "UTF-8"));
-			remoteVersion = Integer.parseInt(br.readLine());
-			br.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return remoteVersion;
-	}
+        for (File directory : files) {
+            String id = directory.getName();
+            File jsonFile = new File(directory, id + ".json");
 
-	public void saveVersionList() throws IOException {
-		String text = this.serializeVersionList();
-		PrintWriter writer = new PrintWriter(new File(this.baseVersionsDir, "versions.json"));
-		writer.print(text);
-		writer.close();
-	}
+            if ((directory.isDirectory()) && (jsonFile.exists())) {
+                try {
+                    if (Launcher.getInstance().getSettings().versionIndex < remoteVersion) {
+                        System.out.println("Deleting local version " + jsonFile.getAbsolutePath() + " because the remote server reported it's outdated.");
+                        jsonFile.delete();
+                    } else {
+                        CompleteVersion version = this.gson.fromJson(this.getUrl("versions/" + id + "/" + id + ".json"), CompleteVersion.class);
+                        this.addVersion(version);
+                    }
+                } catch (JsonSyntaxException ex) {
+                    if (Launcher.getInstance() != null) {
+                        Launcher.getInstance().println("Couldn't load local version " + jsonFile.getAbsolutePath(), ex);
+                    } else {
+                        throw new JsonSyntaxException("Loading file: " + jsonFile.toString(), ex);
+                    }
+                }
+            }
+        }
 
-	public void saveVersion(CompleteVersion version) throws IOException {
-		String text = this.serializeVersion(version);
-		File target = new File(this.baseVersionsDir, version.getId() + "/" + version.getId() + ".json");
-		if (target.getParentFile() != null) {
-			target.getParentFile().mkdirs();
-		}
-		PrintWriter writer = new PrintWriter(target);
-		writer.print(text);
-		writer.close();
-	}
+        Launcher.getInstance().getSettings().versionIndex = remoteVersion;
+        Launcher.getInstance().getSettings().save();
+    }
 
-	public File getBaseDirectory() {
-		return this.baseDirectory;
-	}
+    private int getRemoteIndexVersion() {
+        int remoteVersion = -1;
 
-	@Override
-	public boolean hasAllFiles(CompleteVersion version, OperatingSystem os) {
-		Set<String> files = version.getRequiredFiles(os);
+        try {
+            URL website = new URL("http://download.tfsthiago1112.net/tecnocraft/versions/versionsIndex.txt");
+            BufferedReader br = new BufferedReader(new InputStreamReader(website.openStream(), "UTF-8"));
+            remoteVersion = Integer.parseInt(br.readLine());
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		for (String file : files) {
-			if (!new File(this.baseDirectory, file).isFile()) {
-				return false;
-			}
-		}
+        return remoteVersion;
+    }
 
-		return true;
-	}
+    public void saveVersionList() throws IOException {
+        String text = this.serializeVersionList();
+        PrintWriter writer = new PrintWriter(new File(this.baseVersionsDir, "versions.json"));
+        writer.print(text);
+        writer.close();
+    }
 
-	@Override
-	protected String getUrl(String uri) throws IOException {
-		InputStream inputStream = this.getFileInputStream(uri);
-		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-		StringBuilder result = new StringBuilder();
-		String line;
+    public void saveVersion(CompleteVersion version) throws IOException {
+        String text = this.serializeVersion(version);
+        File target = new File(this.baseVersionsDir, version.getId() + "/" + version.getId() + ".json");
+        if (target.getParentFile() != null) {
+            target.getParentFile().mkdirs();
+        }
+        PrintWriter writer = new PrintWriter(target);
+        writer.print(text);
+        writer.close();
+    }
 
-		while ((line = reader.readLine()) != null) {
-			if (result.length() > 0) {
-				result.append("\n");
-			}
-			result.append(line);
-		}
+    public File getBaseDirectory() {
+        return this.baseDirectory;
+    }
 
-		reader.close();
+    @Override
+    public boolean hasAllFiles(CompleteVersion version, OperatingSystem os) {
+        Set<String> files = version.getRequiredFiles(os);
 
-		return result.toString();
-	}
+        for (String file : files) {
+            if (!new File(this.baseDirectory, file).isFile()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    protected String getUrl(String uri) throws IOException {
+        InputStream inputStream = this.getFileInputStream(uri);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder result = new StringBuilder();
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            if (result.length() > 0) {
+                result.append("\n");
+            }
+            result.append(line);
+        }
+
+        reader.close();
+
+        return result.toString();
+    }
 }

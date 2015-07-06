@@ -5,22 +5,22 @@ import java.util.List;
 
 public interface Version {
 
-	public abstract int getUpdateId();
-	
-	public abstract String getId();
+    public abstract int getUpdateId();
 
-	public abstract Date getUpdatedTime();
+    public abstract String getId();
 
-	public abstract void setUpdatedTime(Date paramDate);
+    public abstract Date getUpdatedTime();
 
-	public abstract Date getReleaseTime();
+    public abstract void setUpdatedTime(Date paramDate);
 
-	public abstract void setReleaseTime(Date paramDate);
+    public abstract Date getReleaseTime();
 
-	public abstract List<String> getChangelog();
+    public abstract void setReleaseTime(Date paramDate);
 
-	public abstract boolean isTestVersion();
+    public abstract List<String> getChangelog();
 
-	public abstract void setIsTestVersion(boolean b);
+    public abstract boolean isTestVersion();
+
+    public abstract void setIsTestVersion(boolean b);
 
 }

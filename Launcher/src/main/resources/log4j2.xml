@@ -2,16 +2,16 @@
 <configuration status="WARN">
     <appenders>
         <Console name="Console" target="SYSTEM_OUT">
-             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
-        <!--<File name="LogFile" fileName="./logs/app.log">
+        <File name="LogFile" fileName="${tc.logdir}/logs/app.log">
             <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-        </File>-->             
+        </File>
     </appenders>
-    <loggers>     
+    <loggers>
         <root level="ALL">
             <appender-ref ref="Console" level="ALL"/>
             <!--<appender-ref ref="LogFile" level="ALL"/>-->
-        </root>    
+        </root>
     </loggers>
 </configuration>

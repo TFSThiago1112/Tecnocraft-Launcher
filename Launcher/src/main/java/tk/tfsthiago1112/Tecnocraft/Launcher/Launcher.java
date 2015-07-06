@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.Proxy;
 import java.nio.file.Files;
 import java.util.UUID;
-
 import tk.tfsthiago1112.Tecnocraft.Launcher.authentication.GameProfile;
 import tk.tfsthiago1112.Tecnocraft.Launcher.authentication.exceptions.AuthenticationException;
 import tk.tfsthiago1112.Tecnocraft.Launcher.authentication.yggdrasil.YggdrasilAuthenticationService;
@@ -16,127 +15,124 @@ import tk.tfsthiago1112.Tecnocraft.Launcher.version.RemoteVersionList;
 
 public class Launcher {
 
-	public static Launcher instance;
+    public static Launcher instance;
 
-	private DiskSettings settings;
+    private DiskSettings settings;
 
-	private VersionManager versionManager;
+    private VersionManager versionManager;
 
-	private GameLauncher gameLauncher = new GameLauncher();
+    private GameLauncher gameLauncher = new GameLauncher();
 
-	private ProfileManager profileManager;
+    private ProfileManager profileManager;
 
-	private Proxy proxy = Proxy.NO_PROXY;
+    private Proxy proxy = Proxy.NO_PROXY;
 
-	protected File baseDirectory;
+    protected File baseDirectory;
 
-	private UUID clientToken = UUID.randomUUID();
-	
-	public static Font font;
+    private UUID clientToken = UUID.randomUUID();
 
-	public Launcher() {
-		this.baseDirectory = OperatingSystem.getCurrentPlatform().getWorkingDirectory();
-		this.versionManager = new VersionManager(new LocalVersionList(this.baseDirectory), new RemoteVersionList(this.proxy), new RemoteTestingVersionList(this.proxy));
-		
-		Launcher.instance = this;
+    public static Font font;
 
-		this.settings = DiskSettings.load();
-		
-		try {
-			font = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/assets/Roboto-Regular.ttf"));
-		} catch (Exception e) {
-			throw new RuntimeException("Couldn't load the required font 'Roboto-Regular.ttf'.", e);
-		}
-		
-		File config = new File(Launcher.instance.getBaseDirectory().getAbsolutePath() + "\\config\\Tecnocraft.cfg");
-		
-	    System.gc();
-	    
-		try
-		{
-			Files.deleteIfExists(config.toPath());
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+    public Launcher() {
+        this.baseDirectory = OperatingSystem.getCurrentPlatform().getWorkingDirectory();
+        this.versionManager = new VersionManager(new LocalVersionList(this.baseDirectory), new RemoteVersionList(this.proxy), new RemoteTestingVersionList(this.proxy));
 
-		this.profileManager = new ProfileManager();
-		this.profileManager.loadProfile();
+        Launcher.instance = this;
 
-		this.refreshVersions();
-	}
+        this.settings = DiskSettings.load();
 
-	public void refreshVersions() {
-		this.versionManager.getExecutorService().submit(new Runnable() {
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/assets/Roboto-Regular.ttf"));
+        } catch (Exception e) {
+            throw new RuntimeException("Couldn't load the required font 'Roboto-Regular.ttf'.", e);
+        }
 
-			@Override
-			public void run() {
-				try {
-					GameProfile profile = profileManager.getSelectedProfile();
-					Launcher.this.versionManager.refreshVersions(profile != null ? profileManager.getSelectedProfile().getName() : null);
-				} catch (Throwable e) {
-					Launcher.getInstance().println("Unexpected exception refreshing version list", e);
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+        File config = new File(Launcher.instance.getBaseDirectory().getAbsolutePath() + "\\config\\Tecnocraft.cfg");
 
-	public void login(String username, String password) {
-		YggdrasilAuthenticationService auth = this.profileManager.getAuthenticationService();
+        System.gc();
 
-		auth.setUsername(username);
-		auth.setPassword(password);
+        try {
+            Files.deleteIfExists(config.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-		try {
-			auth.logIn();
-		} catch (AuthenticationException e) {
-			this.println("Invalid creditentials");
-		}
-	}
+        this.profileManager = new ProfileManager();
+        this.profileManager.loadProfile();
 
-	public void println(String string) {
-		System.out.println(string);
-	}
+        this.refreshVersions();
+    }
 
-	public void println(String string, Throwable e) {
-		System.out.println("exception, " + string);
-	}
+    public void refreshVersions() {
+        this.versionManager.getExecutorService().submit(new Runnable() {
 
-	public static Launcher getInstance() {
-		return instance;
-	}
+            @Override
+            public void run() {
+                try {
+                    GameProfile profile = profileManager.getSelectedProfile();
+                    Launcher.this.versionManager.refreshVersions(profile != null ? profileManager.getSelectedProfile().getName() : null);
+                } catch (Throwable e) {
+                    Launcher.getInstance().println("Unexpected exception refreshing version list", e);
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
-	public File getBaseDirectory() {
-		return this.baseDirectory;
-	}
+    public void login(String username, String password) {
+        YggdrasilAuthenticationService auth = this.profileManager.getAuthenticationService();
 
-	public VersionManager getVersionManager() {
-		return this.versionManager;
-	}
+        auth.setUsername(username);
+        auth.setPassword(password);
 
-	public Proxy getProxy() {
-		return this.proxy;
-	}
+        try {
+            auth.logIn();
+        } catch (AuthenticationException e) {
+            this.println("Invalid creditentials");
+        }
+    }
 
-	public UUID getClientToken() {
-		return this.clientToken;
-	}
+    public void println(String string) {
+        System.out.println(string);
+    }
 
-	public void setClientToken(UUID clientToken) {
-		this.clientToken = clientToken;
-	}
+    public void println(String string, Throwable e) {
+        System.out.println("exception, " + string);
+    }
 
-	public ProfileManager getProfileManager() {
-		return this.profileManager;
-	}
+    public static Launcher getInstance() {
+        return instance;
+    }
 
-	public GameLauncher getGameLauncher() {
-		return this.gameLauncher;
-	}
+    public File getBaseDirectory() {
+        return this.baseDirectory;
+    }
 
-	public DiskSettings getSettings() {
-		return this.settings;
-	}
+    public VersionManager getVersionManager() {
+        return this.versionManager;
+    }
+
+    public Proxy getProxy() {
+        return this.proxy;
+    }
+
+    public UUID getClientToken() {
+        return this.clientToken;
+    }
+
+    public void setClientToken(UUID clientToken) {
+        this.clientToken = clientToken;
+    }
+
+    public ProfileManager getProfileManager() {
+        return this.profileManager;
+    }
+
+    public GameLauncher getGameLauncher() {
+        return this.gameLauncher;
+    }
+
+    public DiskSettings getSettings() {
+        return this.settings;
+    }
 }

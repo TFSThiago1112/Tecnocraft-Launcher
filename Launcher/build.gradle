@@ -32,6 +32,7 @@ jar {
             	exclude '*.so'
             	exclude '*.dylib'
             	exclude '*.jnilib'
+                exclude '*.html'
             } 
         }
     }

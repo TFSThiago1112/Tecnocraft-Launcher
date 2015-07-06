@@ -3,143 +3,142 @@ package tk.tfsthiago1112.Tecnocraft.Launcher.version;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-
 import tk.tfsthiago1112.Tecnocraft.Launcher.OperatingSystem;
 
 public class Library {
 
-	private String name;
+    private String name;
 
-	private List<Rule> rules;
+    private List<Rule> rules;
 
-	private Map<OperatingSystem, String> natives;
+    private Map<OperatingSystem, String> natives;
 
-	private ExtractRules extract;
+    private ExtractRules extract;
 
-	private String url;
-	
-	public String packFormat = "";
+    private String url;
 
-	public Library() {
-	}
+    public String packFormat = "";
 
-	public Library(String name) {
-		if ((name == null) || (name.length() == 0)) {
-			throw new IllegalArgumentException("Library name cannot be null or empty");
-		}
-		this.name = name;
-	}
+    public Library() {
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public Library(String name) {
+        if ((name == null) || (name.length() == 0)) {
+            throw new IllegalArgumentException("Library name cannot be null or empty");
+        }
+        this.name = name;
+    }
 
-	public Library addNative(OperatingSystem operatingSystem, String name) {
-		if ((operatingSystem == null) || (!operatingSystem.isSupported())) {
-			throw new IllegalArgumentException("Cannot add native for unsupported OS");
-		}
-		if ((name == null) || (name.length() == 0)) {
-			throw new IllegalArgumentException("Cannot add native for null or empty name");
-		}
-		if (this.natives == null) {
-			this.natives = new EnumMap<OperatingSystem, String>(OperatingSystem.class);
-		}
-		this.natives.put(operatingSystem, name);
-		return this;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public List<Rule> getRules() {
-		return this.rules;
-	}
+    public Library addNative(OperatingSystem operatingSystem, String name) {
+        if ((operatingSystem == null) || (!operatingSystem.isSupported())) {
+            throw new IllegalArgumentException("Cannot add native for unsupported OS");
+        }
+        if ((name == null) || (name.length() == 0)) {
+            throw new IllegalArgumentException("Cannot add native for null or empty name");
+        }
+        if (this.natives == null) {
+            this.natives = new EnumMap<OperatingSystem, String>(OperatingSystem.class);
+        }
+        this.natives.put(operatingSystem, name);
+        return this;
+    }
 
-	public boolean appliesToCurrentEnvironment() {
-		if (this.rules == null) {
-			return true;
-		}
+    public List<Rule> getRules() {
+        return this.rules;
+    }
 
-		Rule.Action lastAction = Rule.Action.DISALLOW;
+    public boolean appliesToCurrentEnvironment() {
+        if (this.rules == null) {
+            return true;
+        }
 
-		for (Rule rule : this.rules) {
-			Rule.Action action = rule.getAppliedAction();
+        Rule.Action lastAction = Rule.Action.DISALLOW;
 
-			if (action != null) {
-				lastAction = action;
-			}
-		}
+        for (Rule rule : this.rules) {
+            Rule.Action action = rule.getAppliedAction();
 
-		return lastAction == Rule.Action.ALLOW;
-	}
+            if (action != null) {
+                lastAction = action;
+            }
+        }
 
-	public Map<OperatingSystem, String> getNatives() {
-		return this.natives;
-	}
+        return lastAction == Rule.Action.ALLOW;
+    }
 
-	public ExtractRules getExtractRules() {
-		return this.extract;
-	}
+    public Map<OperatingSystem, String> getNatives() {
+        return this.natives;
+    }
 
-	public Library setExtractRules(ExtractRules rules) {
-		this.extract = rules;
-		return this;
-	}
+    public ExtractRules getExtractRules() {
+        return this.extract;
+    }
 
-	public String getArtifactBaseDir() {
-		if (this.name == null) {
-			throw new IllegalStateException("Cannot get artifact dir of empty/blank artifact");
-		}
+    public Library setExtractRules(ExtractRules rules) {
+        this.extract = rules;
+        return this;
+    }
 
-		String[] parts = this.name.split(":", 3);
-		return String.format("%s/%s/%s", new Object[] { parts[0].replaceAll("\\.", "/"), parts[1], parts[2] });
-	}
+    public String getArtifactBaseDir() {
+        if (this.name == null) {
+            throw new IllegalStateException("Cannot get artifact dir of empty/blank artifact");
+        }
 
-	public String getArtifactPath() {
-		if (this.name == null) {
-			throw new IllegalStateException("Cannot get artifact path of empty/blank artifact");
-		}
+        String[] parts = this.name.split(":", 3);
+        return String.format("%s/%s/%s", new Object[]{parts[0].replaceAll("\\.", "/"), parts[1], parts[2]});
+    }
 
-		return String.format("%s/%s", new Object[] { this.getArtifactBaseDir(), this.getArtifactFilename() });
-	}
+    public String getArtifactPath() {
+        if (this.name == null) {
+            throw new IllegalStateException("Cannot get artifact path of empty/blank artifact");
+        }
 
-	public String getArtifactPath(String classifier) {
-		if (this.name == null) {
-			throw new IllegalStateException("Cannot get artifact path of empty/blank artifact");
-		}
+        return String.format("%s/%s", new Object[]{this.getArtifactBaseDir(), this.getArtifactFilename()});
+    }
 
-		return String.format("%s/%s", new Object[] { this.getArtifactBaseDir(), this.getArtifactFilename(classifier) }).replace("${arch}", System.getProperty("sun.arch.data.model"));
-	}
+    public String getArtifactPath(String classifier) {
+        if (this.name == null) {
+            throw new IllegalStateException("Cannot get artifact path of empty/blank artifact");
+        }
 
-	public String getArtifactFilename() {
-		if (this.name == null) {
-			throw new IllegalStateException("Cannot get artifact filename of empty/blank artifact");
-		}
+        return String.format("%s/%s", new Object[]{this.getArtifactBaseDir(), this.getArtifactFilename(classifier)}).replace("${arch}", System.getProperty("sun.arch.data.model"));
+    }
 
-		String[] parts = this.name.split(":", 3);
-		return String.format("%s-%s.jar", new Object[] { parts[1], parts[2] });
-	}
+    public String getArtifactFilename() {
+        if (this.name == null) {
+            throw new IllegalStateException("Cannot get artifact filename of empty/blank artifact");
+        }
 
-	public String getArtifactFilename(String classifier) {
-		if (this.name == null) {
-			throw new IllegalStateException("Cannot get artifact filename of empty/blank artifact");
-		}
+        String[] parts = this.name.split(":", 3);
+        return String.format("%s-%s.jar", new Object[]{parts[1], parts[2]});
+    }
 
-		String[] parts = this.name.split(":", 3);
-		return String.format("%s-%s-%s.jar", new Object[] { parts[1], parts[2], classifier });
-	}
+    public String getArtifactFilename(String classifier) {
+        if (this.name == null) {
+            throw new IllegalStateException("Cannot get artifact filename of empty/blank artifact");
+        }
 
-	@Override
-	public String toString() {
-		return "Library{name='" + this.name + '\'' + ", rules=" + this.rules + ", natives=" + this.natives + ", extract=" + this.extract + '}';
-	}
+        String[] parts = this.name.split(":", 3);
+        return String.format("%s-%s-%s.jar", new Object[]{parts[1], parts[2], classifier});
+    }
 
-	public boolean hasCustomUrl() {
-		return this.url != null;
-	}
+    @Override
+    public String toString() {
+        return "Library{name='" + this.name + '\'' + ", rules=" + this.rules + ", natives=" + this.natives + ", extract=" + this.extract + '}';
+    }
 
-	public String getDownloadUrl() {
-		if (this.url != null) {
-			return this.url;
-		}
+    public boolean hasCustomUrl() {
+        return this.url != null;
+    }
 
-		return "https://libraries.minecraft.net/";
-	}
+    public String getDownloadUrl() {
+        if (this.url != null) {
+            return this.url;
+        }
+
+        return "https://libraries.minecraft.net/";
+    }
 }

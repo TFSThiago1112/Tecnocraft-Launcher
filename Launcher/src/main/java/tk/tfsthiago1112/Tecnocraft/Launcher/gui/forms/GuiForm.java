@@ -1,140 +1,138 @@
 package tk.tfsthiago1112.Tecnocraft.Launcher.gui.forms;
 
 import java.util.ArrayList;
-
+import org.lwjgl.opengl.Display;
 import tk.tfsthiago1112.Tecnocraft.Launcher.gui.GuiPanel;
 import tk.tfsthiago1112.Tecnocraft.Launcher.gui.elements.GuiElement;
 
-import org.lwjgl.opengl.Display;
-
 public abstract class GuiForm {
 
-	private ArrayList<GuiElement> elements = new ArrayList<GuiElement>();
+    private ArrayList<GuiElement> elements = new ArrayList<GuiElement>();
 
-	private ArrayList<GuiElement> addElements = new ArrayList<GuiElement>();
+    private ArrayList<GuiElement> addElements = new ArrayList<GuiElement>();
 
-	private ArrayList<GuiElement> removeElements = new ArrayList<GuiElement>();
+    private ArrayList<GuiElement> removeElements = new ArrayList<GuiElement>();
 
-	protected GuiPanel panel;
+    protected GuiPanel panel;
 
-	protected GuiForm parentForm;
+    protected GuiForm parentForm;
 
-	private int fadeToDo;
+    private int fadeToDo;
 
-	private float fade;
+    private float fade;
 
-	private int fadeX;
+    private int fadeX;
 
-	protected boolean kill;
-	
-	protected boolean onScreen = true;
+    protected boolean kill;
 
-	public GuiForm(GuiPanel panel, GuiForm parentForm) {
-		this.panel = panel;
-		this.parentForm = parentForm;
-		this.fadeX = 0;
-		this.fade = 1.F;
+    protected boolean onScreen = true;
 
-		this.panel.add(this);
-	}
+    public GuiForm(GuiPanel panel, GuiForm parentForm) {
+        this.panel = panel;
+        this.parentForm = parentForm;
+        this.fadeX = 0;
+        this.fade = 1.F;
 
-	public void render() {
-		this.elements.addAll(this.addElements);
-		this.addElements.clear();
+        this.panel.add(this);
+    }
 
-		this.elements.removeAll(this.removeElements);
-		this.removeElements.clear();
+    public void render() {
+        this.elements.addAll(this.addElements);
+        this.addElements.clear();
 
-		if (this.fadeToDo < 0) {
-			this.fadeX -= this.panel.getSettings().fadeSpeed;
-			this.fadeToDo += this.panel.getSettings().fadeSpeed;
+        this.elements.removeAll(this.removeElements);
+        this.removeElements.clear();
 
-			if (this.fadeToDo >= 0) {
-				this.fadeX += this.fadeToDo;
-				this.fadeToDo = 0;
+        if (this.fadeToDo < 0) {
+            this.fadeX -= this.panel.getSettings().fadeSpeed;
+            this.fadeToDo += this.panel.getSettings().fadeSpeed;
 
-				if (this.kill && (this.fadeX < 0)) {
-					this.panel.remove(this);
-				}
-			}
+            if (this.fadeToDo >= 0) {
+                this.fadeX += this.fadeToDo;
+                this.fadeToDo = 0;
 
-			this.fade = 1.0F - Math.abs(this.fadeX / (float) Display.getWidth());
-		} else if (this.fadeToDo > 0) {
-			this.fadeX += this.panel.getSettings().fadeSpeed;
-			this.fadeToDo -= this.panel.getSettings().fadeSpeed;
+                if (this.kill && (this.fadeX < 0)) {
+                    this.panel.remove(this);
+                }
+            }
 
-			if (this.fadeToDo <= 0) {
-				this.fadeX += this.fadeToDo;
-				this.fadeToDo = 0;
+            this.fade = 1.0F - Math.abs(this.fadeX / (float) Display.getWidth());
+        } else if (this.fadeToDo > 0) {
+            this.fadeX += this.panel.getSettings().fadeSpeed;
+            this.fadeToDo -= this.panel.getSettings().fadeSpeed;
 
-				if (this.kill && (this.fadeX > 0)) {
-					this.panel.remove(this);
-				}
-			}
+            if (this.fadeToDo <= 0) {
+                this.fadeX += this.fadeToDo;
+                this.fadeToDo = 0;
 
-			this.fade = 1.0F - Math.abs(this.fadeX / (float) Display.getWidth());
-		}
+                if (this.kill && (this.fadeX > 0)) {
+                    this.panel.remove(this);
+                }
+            }
 
-		for (GuiElement element : this.elements) {
-			if (element.shouldRender()) {
-				element.render();
-			}
-		}
-	}
+            this.fade = 1.0F - Math.abs(this.fadeX / (float) Display.getWidth());
+        }
 
-	public void onElementClick(GuiElement element) {
-		element.onMouseClick();
-	}
-	
-	public void onKey(int key, char character){
-	}
+        for (GuiElement element : this.elements) {
+            if (element.shouldRender()) {
+                element.render();
+            }
+        }
+    }
 
-	public void add(GuiElement element) {
-		this.addElements.add(element);
-	}
+    public void onElementClick(GuiElement element) {
+        element.onMouseClick();
+    }
 
-	public void remove(GuiElement element) {
-		this.removeElements.add(element);
-	}
+    public void onKey(int key, char character) {
+    }
 
-	public ArrayList<GuiElement> getElements() {
-		return this.elements;
-	}
+    public void add(GuiElement element) {
+        this.addElements.add(element);
+    }
 
-	public int getFadeX() {
-		return this.fadeX;
-	}
+    public void remove(GuiElement element) {
+        this.removeElements.add(element);
+    }
 
-	public void setFadeX(int fadeX) {
-		this.fadeX = fadeX;
-	}
+    public ArrayList<GuiElement> getElements() {
+        return this.elements;
+    }
 
-	public float getFade() {
-		return this.fade;
-	}
+    public int getFadeX() {
+        return this.fadeX;
+    }
 
-	public void setFade(float fade) {
-		this.fade = fade;
-	}
+    public void setFadeX(int fadeX) {
+        this.fadeX = fadeX;
+    }
 
-	public void fadeLeft() {
-		this.fadeToDo -= Display.getWidth();
-	}
+    public float getFade() {
+        return this.fade;
+    }
 
-	public void fadeRight() {
-		this.fadeToDo += Display.getWidth();
-	}
+    public void setFade(float fade) {
+        this.fade = fade;
+    }
 
-	public GuiPanel getPanel() {
-		return this.panel;
-	}
-	
-	public boolean onScreen(){
-		return onScreen;
-	}
-	
-	public void setOnScreen(boolean onScreen){
-		this.onScreen = onScreen;
-	}
+    public void fadeLeft() {
+        this.fadeToDo -= Display.getWidth();
+    }
+
+    public void fadeRight() {
+        this.fadeToDo += Display.getWidth();
+    }
+
+    public GuiPanel getPanel() {
+        return this.panel;
+    }
+
+    public boolean onScreen() {
+        return onScreen;
+    }
+
+    public void setOnScreen(boolean onScreen) {
+        this.onScreen = onScreen;
+    }
 
 }

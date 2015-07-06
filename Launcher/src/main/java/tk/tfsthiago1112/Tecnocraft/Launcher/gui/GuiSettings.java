@@ -4,11 +4,11 @@ import org.newdawn.slick.Color;
 
 public class GuiSettings {
 
-	public Color backgroundColor;
+    public Color backgroundColor;
 
-	public Color textFieldColor;
+    public Color textFieldColor;
 
-	public Color textFieldHoveredColor;
+    public Color textFieldHoveredColor;
 
-	public int fadeSpeed;
+    public int fadeSpeed;
 }

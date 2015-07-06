@@ -1,9 +1,11 @@
 println """
-*****************************************************
-	TFSThiago1112 Software Gradle Script
-	Project: Tecnocraft Launcher
-	Output files will be in [subprojects]/build/libs
-*****************************************************
+************************************************************
+    TFSThiago1112 Project Gradle Build Script
+    Project: Tecnocraft Launcher
+    Description: A Launcher for Tecnocraft Modpacks
+    Copyright (C) TFSThiago1112 2015.
+    Licence: TFSThiago1112 Licence Limited Open Source
+************************************************************
 """
 
 subprojects {
@@ -12,6 +14,7 @@ subprojects {
 	repositories {
 	    mavenCentral()
 	    maven { url "http://repo.maven.apache.org/maven2" }
+	    maven { url "http://repository.tfsthiago1112.net/"}
 	}
 
 }

@@ -1,19 +1,17 @@
-// 
+//
 // Decompiled by Procyon v0.5.29
-// 
-
+//
 package tk.tfsthiago1112.Tecnocraft.Launcher.bootstrapper;
 
 import java.util.zip.ZipEntry;
 import java.io.IOException;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.zip.ZipInputStream;
 import java.io.FileInputStream;
 import java.io.File;
 
-public class UnZip
-{
+public class UnZip {
+
     public void unZipIt(final File zipFile, final File outputFolder) {
         final byte[] buffer = new byte[1024];
         try {
@@ -36,8 +34,7 @@ public class UnZip
             }
             zis.closeEntry();
             zis.close();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }

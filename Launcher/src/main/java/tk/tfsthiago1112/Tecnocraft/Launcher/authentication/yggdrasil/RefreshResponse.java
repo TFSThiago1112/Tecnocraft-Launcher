@@ -3,34 +3,35 @@ package tk.tfsthiago1112.Tecnocraft.Launcher.authentication.yggdrasil;
 import tk.tfsthiago1112.Tecnocraft.Launcher.authentication.GameProfile;
 
 public class RefreshResponse extends Response {
-        RefreshResponse(String accToken, String clToken, GameProfile sltProfile, GameProfile[] profiles) {
-            this.accessToken = accToken;
-            this.clientToken = clToken;
-            this.selectedProfile = sltProfile;
-            this.availableProfiles = profiles;
-        }
 
-	private String accessToken;
+    RefreshResponse(String accToken, String clToken, GameProfile sltProfile, GameProfile[] profiles) {
+        this.accessToken = accToken;
+        this.clientToken = clToken;
+        this.selectedProfile = sltProfile;
+        this.availableProfiles = profiles;
+    }
 
-	private String clientToken;
+    private String accessToken;
 
-	private GameProfile selectedProfile;
+    private String clientToken;
 
-	private GameProfile[] availableProfiles;
+    private GameProfile selectedProfile;
 
-	public String getAccessToken() {
-		return this.accessToken;
-	}
+    private GameProfile[] availableProfiles;
 
-	public String getClientToken() {
-		return this.clientToken;
-	}
+    public String getAccessToken() {
+        return this.accessToken;
+    }
 
-	public GameProfile[] getAvailableProfiles() {
-		return this.availableProfiles;
-	}
+    public String getClientToken() {
+        return this.clientToken;
+    }
 
-	public GameProfile getSelectedProfile() {
-		return this.selectedProfile;
-	}
+    public GameProfile[] getAvailableProfiles() {
+        return this.availableProfiles;
+    }
+
+    public GameProfile getSelectedProfile() {
+        return this.selectedProfile;
+    }
 }

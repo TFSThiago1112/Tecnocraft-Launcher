@@ -11,27 +11,27 @@ public class AuthenticationResponse extends Response {
         this.availableProfiles = profiles;
     }
 
-	private String accessToken;
+    private String accessToken;
 
-	private String clientToken;
+    private String clientToken;
 
-	private GameProfile selectedProfile;
+    private GameProfile selectedProfile;
 
-	private GameProfile[] availableProfiles;
+    private GameProfile[] availableProfiles;
 
-	public String getAccessToken() {
-		return this.accessToken;
-	}
+    public String getAccessToken() {
+        return this.accessToken;
+    }
 
-	public String getClientToken() {
-		return this.clientToken;
-	}
+    public String getClientToken() {
+        return this.clientToken;
+    }
 
-	public GameProfile[] getAvailableProfiles() {
-		return this.availableProfiles;
-	}
+    public GameProfile[] getAvailableProfiles() {
+        return this.availableProfiles;
+    }
 
-	public GameProfile getSelectedProfile() {
-		return this.selectedProfile;
-	}
+    public GameProfile getSelectedProfile() {
+        return this.selectedProfile;
+    }
 }

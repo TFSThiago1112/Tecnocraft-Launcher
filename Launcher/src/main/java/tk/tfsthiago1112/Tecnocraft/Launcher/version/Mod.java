@@ -2,28 +2,28 @@ package tk.tfsthiago1112.Tecnocraft.Launcher.version;
 
 public class Mod {
 
-	private String path;
+    private String path;
 
-	private String url;
-	
-	public boolean isRelative = true;
+    private String url;
 
-	public Mod() {
-	}
+    public boolean isRelative = true;
 
-	public String getPath() {
-		return this.path;
-	}
+    public Mod() {
+    }
 
-	public String getUrl() {
-		return this.url;
-	}
+    public String getPath() {
+        return this.path;
+    }
 
-	public String getName() {
-		return this.path.substring(this.path.lastIndexOf("/"), this.path.length());
-	}
+    public String getUrl() {
+        return this.url;
+    }
 
-	public String getVersionPath(Version version) {
-		return "versions/" + version.getId() + "/" + this.getName();
-	}
+    public String getName() {
+        return this.path.substring(this.path.lastIndexOf("/"), this.path.length());
+    }
+
+    public String getVersionPath(Version version) {
+        return "versions/" + version.getId() + "/" + this.getName();
+    }
 }

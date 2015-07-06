@@ -10,59 +10,59 @@ import java.util.Arrays;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
-
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 
 public class UnpackUtil {
-	public static void unpackLibrary(File output, byte[] data)
-			throws IOException {
-		if (output.exists()) {
-			output.delete();
-		}
 
-		byte[] decompressed = readFully(new XZCompressorInputStream(
-				new ByteArrayInputStream(data)));
+    public static void unpackLibrary(File output, byte[] data)
+            throws IOException {
+        if (output.exists()) {
+            output.delete();
+        }
 
-		String end = new String(decompressed, decompressed.length - 4, 4);
-		if (!end.equals("SIGN")) {
-			System.out.println("Unpacking failed, signature missing " + end);
-			return;
-		}
+        byte[] decompressed = readFully(new XZCompressorInputStream(
+                new ByteArrayInputStream(data)));
 
-		int x = decompressed.length;
-		int len = decompressed[(x - 8)] & 0xFF
-				| (decompressed[(x - 7)] & 0xFF) << 8
-				| (decompressed[(x - 6)] & 0xFF) << 16
-				| (decompressed[(x - 5)] & 0xFF) << 24;
+        String end = new String(decompressed, decompressed.length - 4, 4);
+        if (!end.equals("SIGN")) {
+            System.out.println("Unpacking failed, signature missing " + end);
+            return;
+        }
 
-		byte[] checksums = Arrays.copyOfRange(decompressed, decompressed.length
-				- len - 8, decompressed.length - 8);
+        int x = decompressed.length;
+        int len = decompressed[(x - 8)] & 0xFF
+                | (decompressed[(x - 7)] & 0xFF) << 8
+                | (decompressed[(x - 6)] & 0xFF) << 16
+                | (decompressed[(x - 5)] & 0xFF) << 24;
 
-		FileOutputStream jarBytes = new FileOutputStream(output);
-		JarOutputStream jos = new JarOutputStream(jarBytes);
+        byte[] checksums = Arrays.copyOfRange(decompressed, decompressed.length
+                - len - 8, decompressed.length - 8);
 
-		Pack200.newUnpacker().unpack(new ByteArrayInputStream(decompressed),
-				jos);
+        FileOutputStream jarBytes = new FileOutputStream(output);
+        JarOutputStream jos = new JarOutputStream(jarBytes);
 
-		jos.putNextEntry(new JarEntry("checksums.sha1"));
-		jos.write(checksums);
-		jos.closeEntry();
+        Pack200.newUnpacker().unpack(new ByteArrayInputStream(decompressed),
+                jos);
 
-		jos.close();
-		jarBytes.close();
-	}
+        jos.putNextEntry(new JarEntry("checksums.sha1"));
+        jos.write(checksums);
+        jos.closeEntry();
 
-	public static byte[] readFully(InputStream stream) throws IOException {
-		byte[] data = new byte[4096];
-		ByteArrayOutputStream entryBuffer = new ByteArrayOutputStream();
-		int len;
-		do {
-			len = stream.read(data);
-			if (len > 0) {
-				entryBuffer.write(data, 0, len);
-			}
-		} while (len != -1);
+        jos.close();
+        jarBytes.close();
+    }
 
-		return entryBuffer.toByteArray();
-	}
+    public static byte[] readFully(InputStream stream) throws IOException {
+        byte[] data = new byte[4096];
+        ByteArrayOutputStream entryBuffer = new ByteArrayOutputStream();
+        int len;
+        do {
+            len = stream.read(data);
+            if (len > 0) {
+                entryBuffer.write(data, 0, len);
+            }
+        } while (len != -1);
+
+        return entryBuffer.toByteArray();
+    }
 }

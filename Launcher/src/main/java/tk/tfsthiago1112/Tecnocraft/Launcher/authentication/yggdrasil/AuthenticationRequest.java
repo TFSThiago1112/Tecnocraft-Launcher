@@ -3,18 +3,18 @@ package tk.tfsthiago1112.Tecnocraft.Launcher.authentication.yggdrasil;
 @SuppressWarnings("unused")
 public class AuthenticationRequest {
 
-	private Agent agent;
+    private Agent agent;
 
-	private String username;
+    private String username;
 
-	private String password;
+    private String password;
 
-	private String clientToken;
+    private String clientToken;
 
-	public AuthenticationRequest(YggdrasilAuthenticationService authenticationService, String password) {
-		this.agent = authenticationService.getAgent();
-		this.username = authenticationService.getUsername();
-		this.clientToken = authenticationService.getClientToken();
-		this.password = password;
-	}
+    public AuthenticationRequest(YggdrasilAuthenticationService authenticationService, String password) {
+        this.agent = authenticationService.getAgent();
+        this.username = authenticationService.getUsername();
+        this.clientToken = authenticationService.getClientToken();
+        this.password = password;
+    }
 }

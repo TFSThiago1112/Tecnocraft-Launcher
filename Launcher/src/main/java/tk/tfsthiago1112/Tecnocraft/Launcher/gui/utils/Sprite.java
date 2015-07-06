@@ -5,37 +5,37 @@ import org.newdawn.slick.opengl.Texture;
 
 public class Sprite {
 
-	private Texture texture;
+    private Texture texture;
 
-	public Sprite(Texture texture) {
-		this.texture = texture;
-	}
+    public Sprite(Texture texture) {
+        this.texture = texture;
+    }
 
-	public void render(int x, int y) {
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+    public void render(int x, int y) {
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-		this.texture.bind();
-		
-		GL11.glBegin(GL11.GL_QUADS);
-		
-		GL11.glTexCoord2f(0, 0);
-		GL11.glVertex2f(x, y);
-		GL11.glTexCoord2f(1, 0);
-		GL11.glVertex2f(x + this.texture.getTextureWidth(), y);
-		GL11.glTexCoord2f(1, 1);
-		GL11.glVertex2f(x + this.texture.getTextureWidth(), y + this.texture.getTextureHeight());
-		GL11.glTexCoord2f(0, 1);
-		GL11.glVertex2f(x, y + this.texture.getTextureHeight());
-		GL11.glEnd();
-		
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-	}
+        this.texture.bind();
 
-	public int getWidth() {
-		return this.texture.getImageWidth();
-	}
+        GL11.glBegin(GL11.GL_QUADS);
 
-	public int getHeight() {
-		return this.texture.getImageHeight();
-	}
+        GL11.glTexCoord2f(0, 0);
+        GL11.glVertex2f(x, y);
+        GL11.glTexCoord2f(1, 0);
+        GL11.glVertex2f(x + this.texture.getTextureWidth(), y);
+        GL11.glTexCoord2f(1, 1);
+        GL11.glVertex2f(x + this.texture.getTextureWidth(), y + this.texture.getTextureHeight());
+        GL11.glTexCoord2f(0, 1);
+        GL11.glVertex2f(x, y + this.texture.getTextureHeight());
+        GL11.glEnd();
+
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+    }
+
+    public int getWidth() {
+        return this.texture.getImageWidth();
+    }
+
+    public int getHeight() {
+        return this.texture.getImageHeight();
+    }
 }
