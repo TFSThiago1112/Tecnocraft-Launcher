@@ -10,11 +10,29 @@ println """
 
 subprojects {
 	apply plugin: 'java'
+	apply plugin: 'maven'
 	group = 'tk.tfsthiago1112.Tecnocraft'
 	repositories {
 	    mavenCentral()
 	    maven { url "http://repo.maven.apache.org/maven2" }
-	    maven { url "http://repository.tfsthiago1112.net/"}
+	    maven { url "http://repository.tfsthiago1112.net/External"}
+	    maven { url "http://repository.tfsthiago1112.net/TFSThiago1112"}
 	}
-
+	configurations {
+        deployerJars
+	}
+	dependencies {
+	    deployerJars 'org.apache.maven.wagon:wagon-ftp:2.2'
+	}
+	uploadArchives {
+	    repositories {
+	        mavenDeployer {
+	            configuration = configurations.deployerJars
+	            logger.info('Publishing to local repository')
+	            repository(url: 'ftp://repository.tfsthiago1112.net') {
+	                authentication(userName: 'MavenUpload', password: "tfs1112uyt")
+	            }
+	        }
+	    }
+	}
 }

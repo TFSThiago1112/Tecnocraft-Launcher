@@ -13,11 +13,14 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import tk.tfsthiago1112.Tecnocraft.Launcher.Launcher;
 import tk.tfsthiago1112.Tecnocraft.Launcher.utils.StringUtils;
 
 public abstract class BaseAuthenticationService implements AuthenticationService {
 
+    static Logger log = LogManager.getLogger();
     private String username;
 
     private String password;
@@ -222,7 +225,7 @@ public abstract class BaseAuthenticationService implements AuthenticationService
 
             return new String[]{username, password};
         } catch (Exception e) {
-            Launcher.getInstance().println("Couldn't load old lastlogin file", e);
+            log.error("Couldn't load old lastlogin file", e);
         }
         return null;
     }

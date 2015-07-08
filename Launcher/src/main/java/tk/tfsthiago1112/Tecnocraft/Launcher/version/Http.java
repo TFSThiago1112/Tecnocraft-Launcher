@@ -10,10 +10,13 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
-import tk.tfsthiago1112.Tecnocraft.Launcher.Launcher;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import tk.tfsthiago1112.Tecnocraft.Launcher.utils.Utils;
 
 public class Http {
+
+    static Logger log = LogManager.getLogger();
 
     public static String buildQuery(Map<String, Object> query) {
         StringBuilder builder = new StringBuilder();
@@ -25,7 +28,7 @@ public class Http {
             try {
                 builder.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
             } catch (UnsupportedEncodingException e) {
-                Launcher.getInstance().println("Unexpected exception building query", e);
+                log.error("Unexpected exception building query", e);
             }
 
             if (entry.getValue() != null) {
@@ -33,7 +36,7 @@ public class Http {
                 try {
                     builder.append(URLEncoder.encode(entry.getValue().toString(), "UTF-8"));
                 } catch (UnsupportedEncodingException e) {
-                    Launcher.getInstance().println("Unexpected exception building query", e);
+                    log.error("Unexpected exception building query", e);
                 }
             }
         }

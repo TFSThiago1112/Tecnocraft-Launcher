@@ -1,5 +1,6 @@
 package tk.tfsthiago1112.Tecnocraft.Launcher.version;
 
+import com.google.gson.JsonSyntaxException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,14 +11,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Set;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import tk.tfsthiago1112.Tecnocraft.Launcher.Launcher;
 import tk.tfsthiago1112.Tecnocraft.Launcher.OperatingSystem;
 
-import com.google.gson.JsonSyntaxException;
-
 public class LocalVersionList extends VersionList {
 
+    static Logger log = LogManager.getLogger();
     private final File baseDirectory;
 
     private final File baseVersionsDir;
@@ -56,7 +57,7 @@ public class LocalVersionList extends VersionList {
             if ((directory.isDirectory()) && (jsonFile.exists())) {
                 try {
                     if (Launcher.getInstance().getSettings().versionIndex < remoteVersion) {
-                        System.out.println("Deleting local version " + jsonFile.getAbsolutePath() + " because the remote server reported it's outdated.");
+                        log.info("Deleting local version " + jsonFile.getAbsolutePath() + " because the remote server reported it's outdated.");
                         jsonFile.delete();
                     } else {
                         CompleteVersion version = this.gson.fromJson(this.getUrl("versions/" + id + "/" + id + ".json"), CompleteVersion.class);
@@ -64,7 +65,7 @@ public class LocalVersionList extends VersionList {
                     }
                 } catch (JsonSyntaxException ex) {
                     if (Launcher.getInstance() != null) {
-                        Launcher.getInstance().println("Couldn't load local version " + jsonFile.getAbsolutePath(), ex);
+                        log.error("Couldn't load local version " + jsonFile.getAbsolutePath(), ex);
                     } else {
                         throw new JsonSyntaxException("Loading file: " + jsonFile.toString(), ex);
                     }

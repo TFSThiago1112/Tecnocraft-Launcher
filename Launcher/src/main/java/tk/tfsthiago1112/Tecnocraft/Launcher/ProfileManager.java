@@ -8,12 +8,15 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import tk.tfsthiago1112.Tecnocraft.Launcher.authentication.GameProfile;
 import tk.tfsthiago1112.Tecnocraft.Launcher.authentication.yggdrasil.YggdrasilAuthenticationService;
 import tk.tfsthiago1112.Tecnocraft.Launcher.utils.FileUtils;
 
 public class ProfileManager {
 
+    static Logger log = LogManager.getLogger();
     private final Gson gson;
 
     private YggdrasilAuthenticationService authenticationService;
@@ -40,7 +43,7 @@ public class ProfileManager {
             this.authenticationService.logIn();
             this.saveProfile();
         } catch (Exception e) {
-            Launcher.getInstance().println("Couldn't load profile.");
+            log.error("Couldn't load profile.", e);
             this.authenticationService.logOut();
         }
     }
@@ -51,7 +54,7 @@ public class ProfileManager {
         try {
             FileUtils.writeStringToFile(new File(Launcher.getInstance().getBaseDirectory(), "profile.json"), rawCredentials);
         } catch (IOException e) {
-            Launcher.getInstance().println("Couldn't write profile.");
+            log.error("Couldn't write profile.", e);
         }
     }
 
@@ -61,7 +64,7 @@ public class ProfileManager {
         try {
             FileUtils.writeStringToFile(new File(Launcher.getInstance().getBaseDirectory(), "profile.json"), rawCredentials);
         } catch (IOException e) {
-            Launcher.getInstance().println("Couldn't write profile.");
+            log.error("Couldn't write profile.", e);
         }
     }
 

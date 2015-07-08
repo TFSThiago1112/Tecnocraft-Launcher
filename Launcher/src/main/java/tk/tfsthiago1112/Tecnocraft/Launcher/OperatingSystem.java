@@ -2,6 +2,8 @@ package tk.tfsthiago1112.Tecnocraft.Launcher;
 
 import java.io.File;
 import java.net.URI;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public enum OperatingSystem {
 
@@ -77,12 +79,13 @@ public enum OperatingSystem {
     }
 
     public static void openLink(URI link) {
+        Logger log = LogManager.getLogger();
         try {
             Class<?> desktopClass = Class.forName("java.awt.Desktop");
             Object o = desktopClass.getMethod("getDesktop", new Class[0]).invoke(null, new Object[0]);
             desktopClass.getMethod("browse", new Class[]{URI.class}).invoke(o, new Object[]{link});
         } catch (Throwable e) {
-            Launcher.getInstance().println("Failed to open link " + link.toString(), e);
+            log.error("Failed to open link " + link.toString(), e);
         }
     }
 }

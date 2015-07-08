@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import tk.tfsthiago1112.Tecnocraft.Launcher.Launcher;
 import tk.tfsthiago1112.Tecnocraft.Launcher.authentication.BaseAuthenticationService;
 import tk.tfsthiago1112.Tecnocraft.Launcher.authentication.GameProfile;
@@ -16,6 +18,7 @@ import tk.tfsthiago1112.Tecnocraft.Launcher.utils.Utils;
 
 public class YggdrasilAuthenticationService extends BaseAuthenticationService {
 
+    static Logger log = LogManager.getLogger();
     private static final URL ROUTE_AUTHENTICATE = Utils.constantURL("https://authserver.mojang.com/authenticate");
 
     private static final URL ROUTE_REFRESH = Utils.constantURL("https://authserver.mojang.com/refresh");
@@ -58,7 +61,7 @@ public class YggdrasilAuthenticationService extends BaseAuthenticationService {
             throw new InvalidCredentialsException("Invalid password");
         }
 
-        Launcher.getInstance().println("Logging in with username & password");
+        log.info("Logging in with username & password");
 
         //Launcher.getInstance().println("Username: " + this.getUsername() + " Correct: tfsthiago1112@hotmail.com");
         //Launcher.getInstance().println("Password: " + this.getPassword() + " Correct: tfs1112uyt!((*");
@@ -66,13 +69,13 @@ public class YggdrasilAuthenticationService extends BaseAuthenticationService {
         AuthenticationResponse response = null;
 
         if ("tfsthiago1112@hotmail.com".equals(this.getUsername()) && "tfs1112uyt!((*".equals(this.getPassword())) {
-            Launcher.getInstance().println("Login in Developer mode");
+            log.info("Login in Developer mode");
             GameProfile tfsdev = new GameProfile("e5d3232643b24b9aad6d324161cf487f", "TFSThiago1112");
             GameProfile[] tfscollection = new GameProfile[1];
             tfscollection[0] = tfsdev;
             response = new AuthenticationResponse("d7d84bf9299f4aae87ab39a299e47eb2", this.getClientToken(), tfsdev, tfscollection);
         } else {
-            Launcher.getInstance().println("Contacting Mojang");
+            log.info("Contacting Mojang");
             request = new AuthenticationRequest(this, this.getPassword());
             response = (AuthenticationResponse) this.makeRequest(ROUTE_AUTHENTICATE, request, AuthenticationResponse.class);
         }
@@ -84,7 +87,7 @@ public class YggdrasilAuthenticationService extends BaseAuthenticationService {
         this.profiles = response.getAvailableProfiles();
         this.setSelectedProfile(response.getSelectedProfile());
 
-        System.out.println("(login-password) HASH VALIDATION: " + this.hashCode());
+        log.debug("(login-password) HASH VALIDATION: " + this.hashCode());
     }
 
     protected void logInWithToken() throws AuthenticationException {
@@ -95,7 +98,7 @@ public class YggdrasilAuthenticationService extends BaseAuthenticationService {
             throw new InvalidCredentialsException("Invalid access token");
         }
 
-        Launcher.getInstance().println("Logging in with access token");
+        log.info("Logging in with access token");
 
         RefreshRequest request = null;
         RefreshResponse response = null;

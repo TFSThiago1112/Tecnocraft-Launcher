@@ -117,7 +117,7 @@ public class GameLauncher implements DownloadListener, JavaProcessRunnable, Runn
                     byte[] encoded = Files.readAllBytes(persistentFile.toPath());
                     int persistentVersion = Integer.parseInt(new String(encoded, Charset.defaultCharset()));
 
-                    System.out.println(persistentVersion);
+                    log.trace(persistentVersion);
 
                     if (persistentVersion >= this.version.getUpdateId()) {
                         forceUpdate = false;
@@ -221,16 +221,21 @@ public class GameLauncher implements DownloadListener, JavaProcessRunnable, Runn
             log.error("Aborting launch; game directory is not actually a directory");
             return;
         }
+        boolean is32Bit = "32".equals(System.getProperty("sun.arch.data.model"));
+
+        if (this.version.getOnly64bits() && is32Bit) {
+            log.error("Aborting launch; your computer isn't compatible with this version or don't have enought memory to launcher");
+            return;
+        }
 
         JavaProcessLauncher processLauncher = new JavaProcessLauncher(null, new String[0]);
         processLauncher.directory(gameDirectory);
 
         if (OperatingSystem.getCurrentPlatform().equals(OperatingSystem.OSX)) {
-            processLauncher.addCommands(new String[]{"-Xdock:icon=" + new File(assetsDir.getAssetDir(), "icons/minecraft.icns").getAbsolutePath(), "-Xdock:name=Minecraft"});
+            processLauncher.addCommands(new String[]{"-Xdock:icon=" + new File(assetsDir.getAssetDir(), "icons/minecraft.icns").getAbsolutePath(), "-Xdock:name=Tecnocraft"});
         }
 
-        boolean is32Bit = "32".equals(System.getProperty("sun.arch.data.model"));
-        String defaultArgument = is32Bit ? "-Xmx512M" : "-Xmx1G";
+        String defaultArgument = is32Bit ? "-Xmx1G" : "-Xmx2G";
         processLauncher.addSplitCommands(defaultArgument);
 
         processLauncher.addCommands(new String[]{"-Djava.library.path=" + this.nativeDir.getAbsolutePath()});
@@ -259,11 +264,11 @@ public class GameLauncher implements DownloadListener, JavaProcessRunnable, Runn
                 first = false;
             }
 
-            Launcher.getInstance().println("Running " + full.toString());
+            log.info("Running " + full.toString());
             JavaProcess process = processLauncher.start();
             process.safeSetExitRunnable(this);
         } catch (IOException e) {
-            Launcher.getInstance().println("Couldn't launch game", e);
+            log.error("Couldn't launch game", e);
             return;
         }
 
@@ -273,7 +278,7 @@ public class GameLauncher implements DownloadListener, JavaProcessRunnable, Runn
 
     private String[] getMinecraftArguments(CompleteVersion version, String player, File gameDirectory, AssetIndex assetsIndex, YggdrasilAuthenticationService authentication) {
         if (version.getMinecraftArguments() == null) {
-            Launcher.getInstance().println("Can't run version, missing minecraftArguments");
+            log.error("Can't run version, missing minecraftArguments");
             return null;
         }
 
@@ -308,7 +313,7 @@ public class GameLauncher implements DownloadListener, JavaProcessRunnable, Runn
 
         for (int i = 0; i < split.length; i++) {
             split[i] = substitutor.replace(split[i]);
-            System.out.println(substitutor.replace(split[i]));
+            log.trace(substitutor.replace(split[i]));
         }
 
         return split;

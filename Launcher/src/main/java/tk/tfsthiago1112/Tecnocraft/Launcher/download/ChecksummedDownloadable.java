@@ -48,6 +48,7 @@ public class ChecksummedDownloadable extends Downloadable {
         if (this.checksum == null) {
             try {
                 HttpURLConnection connection = this.makeConnection(new URL(this.getUrl().toString() + ".sha1"));
+                connection.setReadTimeout(100000);
                 int status = connection.getResponseCode();
 
                 if ((status / 100) == 2) {
@@ -75,6 +76,7 @@ public class ChecksummedDownloadable extends Downloadable {
         }
         try {
             HttpURLConnection connection = this.makeConnection(this.getUrl());
+            connection.setReadTimeout(100000);
             int status = connection.getResponseCode();
 
             if ((status / 100) == 2) {

@@ -22,6 +22,7 @@ public class CompressedDownloadable extends ChecksummedDownloadable {
         byte[] buffer = new byte[8 * 1024];
 
         URLConnection urlConnect = this.getUrl().openConnection();
+        urlConnect.setReadTimeout(100000);
         urlConnect.setDoInput(true);
         urlConnect.setDoOutput(true);
 

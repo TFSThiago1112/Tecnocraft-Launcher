@@ -5,10 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import tk.tfsthiago1112.Tecnocraft.Launcher.Launcher;
+import org.apache.logging.log4j.LogManager;
 
 public class ProcessMonitorThread extends Thread {
 
+    static org.apache.logging.log4j.Logger log = LogManager.getLogger();
     private final JavaProcess process;
 
     public ProcessMonitorThread(JavaProcess process) {
@@ -24,7 +25,7 @@ public class ProcessMonitorThread extends Thread {
         while (this.process.isRunning()) {
             try {
                 while ((line = buf.readLine()) != null) {
-                    Launcher.getInstance().println("Client> " + line);
+                    log.debug("Client> " + line);
                     this.process.getSysOutLines().add(line);
                 }
             } catch (IOException ex) {

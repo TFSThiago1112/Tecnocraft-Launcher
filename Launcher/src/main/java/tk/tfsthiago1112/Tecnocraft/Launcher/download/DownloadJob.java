@@ -8,10 +8,12 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
-import tk.tfsthiago1112.Tecnocraft.Launcher.Launcher;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DownloadJob {
 
+    static Logger log = LogManager.getLogger();
     private final Queue<Downloadable> remainingFiles = new ConcurrentLinkedQueue<Downloadable>();
 
     private final List<Downloadable> allFiles = Collections.synchronizedList(new ArrayList<Downloadable>());
@@ -89,12 +91,12 @@ public class DownloadJob {
         this.started = true;
 
         if (this.allFiles.isEmpty()) {
-            Launcher.getInstance().println("Download job '" + this.name + "' skipped as there are no files to download");
+            log.info("Download job '" + this.name + "' skipped as there are no files to download");
             this.listener.onDownloadJobFinished(this);
         } else {
             int threads = executorService.getMaximumPoolSize();
             this.remainingThreads.set(threads);
-            Launcher.getInstance().println("Download job '" + this.name + "' started (" + threads + " threads, " + this.allFiles.size() + " files)");
+            log.info("Download job '" + this.name + "' started (" + threads + " threads, " + this.allFiles.size() + " files)");
             for (int i = 0; i < threads; i++) {
                 executorService.submit(new Runnable() {
 
@@ -114,13 +116,13 @@ public class DownloadJob {
                 if (!this.ignoreFailures) {
                     this.failures.add(downloadable);
                 }
-                Launcher.getInstance().println("Gave up trying to download " + downloadable.getUrl() + " for job '" + this.name + "'");
+                log.info("Gave up trying to download " + downloadable.getUrl() + " for job '" + this.name + "'");
             } else {
                 try {
                     String result = downloadable.download();
                     this.successful.add(downloadable);
-                    Launcher.getInstance().println("Finished downloading " + downloadable.getTarget() + " for job '" + this.name + "'" + ": " + result);
-                    Launcher.getInstance().println("Downloaded from: " + downloadable.getUrl());
+                    log.info("Finished downloading " + downloadable.getTarget() + " for job '" + this.name + "'" + ": " + result);
+                    log.info("Downloaded from: " + downloadable.getUrl());
                 } catch (Throwable t) {
                     try {
                         throw t;
@@ -128,7 +130,7 @@ public class DownloadJob {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    Launcher.getInstance().println("Couldn't download " + downloadable.getUrl() + " for job '" + this.name + "'", t);
+                    log.error("Couldn't download " + downloadable.getUrl() + " for job '" + this.name + "'", t);
                     this.remainingFiles.add(downloadable);
                 }
             }

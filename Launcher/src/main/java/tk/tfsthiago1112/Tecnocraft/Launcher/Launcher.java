@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.Proxy;
 import java.nio.file.Files;
 import java.util.UUID;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import tk.tfsthiago1112.Tecnocraft.Launcher.authentication.GameProfile;
 import tk.tfsthiago1112.Tecnocraft.Launcher.authentication.exceptions.AuthenticationException;
 import tk.tfsthiago1112.Tecnocraft.Launcher.authentication.yggdrasil.YggdrasilAuthenticationService;
@@ -15,6 +17,7 @@ import tk.tfsthiago1112.Tecnocraft.Launcher.version.RemoteVersionList;
 
 public class Launcher {
 
+    static Logger log = LogManager.getLogger();
     public static Launcher instance;
 
     private DiskSettings settings;
@@ -72,7 +75,7 @@ public class Launcher {
                     GameProfile profile = profileManager.getSelectedProfile();
                     Launcher.this.versionManager.refreshVersions(profile != null ? profileManager.getSelectedProfile().getName() : null);
                 } catch (Throwable e) {
-                    Launcher.getInstance().println("Unexpected exception refreshing version list", e);
+                    log.error("Unexpected exception refreshing version list", e);
                     e.printStackTrace();
                 }
             }
@@ -88,16 +91,8 @@ public class Launcher {
         try {
             auth.logIn();
         } catch (AuthenticationException e) {
-            this.println("Invalid creditentials");
+            log.error("Invalid creditentials");
         }
-    }
-
-    public void println(String string) {
-        System.out.println(string);
-    }
-
-    public void println(String string, Throwable e) {
-        System.out.println("exception, " + string);
     }
 
     public static Launcher getInstance() {

@@ -11,8 +11,12 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class UnpackUtil {
+
+    static Logger log = LogManager.getLogger();
 
     public static void unpackLibrary(File output, byte[] data)
             throws IOException {
@@ -25,7 +29,7 @@ public class UnpackUtil {
 
         String end = new String(decompressed, decompressed.length - 4, 4);
         if (!end.equals("SIGN")) {
-            System.out.println("Unpacking failed, signature missing " + end);
+            log.error("Unpacking failed, signature missing " + end);
             return;
         }
 

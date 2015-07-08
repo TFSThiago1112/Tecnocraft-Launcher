@@ -1,6 +1,8 @@
 package tk.tfsthiago1112.Tecnocraft.Launcher.start;
 
 import java.io.File;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
 
 public class Util {
 
@@ -48,7 +50,10 @@ public class Util {
     }
 
     public static void LogConfigurator() {
-
+        File workingDir = getWorkingDirectory();
+        System.setProperty("tecnocraft.home", workingDir.getAbsolutePath());
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        ctx.reconfigure();
     }
 
     public static enum OS {

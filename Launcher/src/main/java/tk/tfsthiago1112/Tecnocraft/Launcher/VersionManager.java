@@ -18,6 +18,8 @@ import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import tk.tfsthiago1112.Tecnocraft.Launcher.download.DownloadJob;
 import tk.tfsthiago1112.Tecnocraft.Launcher.download.Downloadable;
 import tk.tfsthiago1112.Tecnocraft.Launcher.download.EtagDownloadable;
@@ -36,6 +38,8 @@ import tk.tfsthiago1112.Tecnocraft.Launcher.version.assets.AssetDownloadable;
 import tk.tfsthiago1112.Tecnocraft.Launcher.version.assets.AssetIndex;
 
 public class VersionManager {
+
+    static Logger log = LogManager.getLogger();
 
     private final ThreadPoolExecutor executorService = new ThreadPoolExecutor(8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
 
@@ -251,9 +255,9 @@ public class VersionManager {
 
             long end = System.nanoTime();
             long delta = end - start;
-            Launcher.getInstance().println("Delta time to compare resources: " + (delta / 1000000L) + " ms ");
+            log.info("Delta time to compare resources: " + (delta / 1000000L) + " ms ");
         } catch (Exception ex) {
-            Launcher.getInstance().println("Couldn't download resources", ex);
+            log.error("Couldn't download resources", ex);
         } finally {
             try {
                 if (inputStream != null) {

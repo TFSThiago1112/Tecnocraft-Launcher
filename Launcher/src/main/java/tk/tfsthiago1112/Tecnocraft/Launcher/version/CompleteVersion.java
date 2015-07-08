@@ -26,6 +26,8 @@ public class CompleteVersion implements Version {
 
     private Date releaseTime;
 
+    private Boolean Only64bits;
+
     private List<String> changelog;
 
     private String minecraftVersion;
@@ -53,7 +55,7 @@ public class CompleteVersion implements Version {
     public CompleteVersion() {
     }
 
-    public CompleteVersion(String id, Date releaseTime, List<String> changelog, Date updateTime, String mainClass, String minecraftArguments) {
+    public CompleteVersion(String id, Date releaseTime, Boolean Only64bits, List<String> changelog, Date updateTime, String mainClass, String minecraftArguments) {
         if ((id == null) || (id.length() == 0)) {
             throw new IllegalArgumentException("ID cannot be null or empty");
         }
@@ -75,6 +77,7 @@ public class CompleteVersion implements Version {
         }
 
         this.id = id;
+        this.Only64bits = Only64bits;
         this.releaseTime = releaseTime;
         this.changelog = changelog;
         this.time = updateTime;
@@ -85,11 +88,11 @@ public class CompleteVersion implements Version {
     }
 
     public CompleteVersion(CompleteVersion version) {
-        this(version.getId(), version.getReleaseTime(), version.getChangelog(), version.getUpdatedTime(), version.getMainClass(), version.getMinecraftArguments());
+        this(version.getId(), version.getReleaseTime(), false, version.getChangelog(), version.getUpdatedTime(), version.getMainClass(), version.getMinecraftArguments());
     }
 
     public CompleteVersion(Version version, String mainClass, String minecraftArguments) {
-        this(version.getId(), version.getReleaseTime(), version.getChangelog(), version.getUpdatedTime(), mainClass, minecraftArguments);
+        this(version.getId(), version.getReleaseTime(), false, version.getChangelog(), version.getUpdatedTime(), mainClass, minecraftArguments);
     }
 
     @Override
@@ -118,6 +121,10 @@ public class CompleteVersion implements Version {
 
     public Collection<Library> getLibraries() {
         return this.libraries;
+    }
+
+    public Boolean getOnly64bits() {
+        return this.Only64bits;
     }
 
     public Collection<Mod> getMods() {

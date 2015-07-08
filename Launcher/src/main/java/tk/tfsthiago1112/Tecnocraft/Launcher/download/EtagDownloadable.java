@@ -20,6 +20,7 @@ public class EtagDownloadable extends Downloadable {
         this.ensureFileWritable();
         try {
             HttpURLConnection connection = this.makeConnection(this.getUrl());
+            connection.setReadTimeout(100000);
             int status = connection.getResponseCode();
 
             if (status == 304) {

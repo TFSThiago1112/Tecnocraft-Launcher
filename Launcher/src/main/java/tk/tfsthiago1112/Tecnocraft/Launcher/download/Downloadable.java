@@ -13,10 +13,12 @@ import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import tk.tfsthiago1112.Tecnocraft.Launcher.Launcher;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public abstract class Downloadable {
 
+    static Logger log = LogManager.getLogger();
     private final URL url;
 
     private final File target;
@@ -149,7 +151,7 @@ public abstract class Downloadable {
 
     protected void ensureFileWritable() {
         if ((this.target.getParentFile() != null) && (!this.target.getParentFile().isDirectory())) {
-            Launcher.getInstance().println("Making directory " + this.target.getParentFile());
+            log.info("Making directory " + this.target.getParentFile());
 
             if ((!this.target.getParentFile().mkdirs()) && (!this.target.getParentFile().isDirectory())) {
                 throw new RuntimeException("Could not create directory " + this.target.getParentFile());

@@ -3,25 +3,25 @@
 //
 package tk.tfsthiago1112.Tecnocraft.Launcher.bootstrapper;
 
-import javax.swing.UIManager;
-import javax.swing.JOptionPane;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.URLClassLoader;
-import tk.tfsthiago1112.Tecnocraft.Launcher.gui.swing.GuiFirstTimeInit;
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-import java.nio.channels.ReadableByteChannel;
-import java.io.FileOutputStream;
-import java.nio.channels.Channels;
 import java.net.MalformedURLException;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.File;
+import java.net.URLClassLoader;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import tk.tfsthiago1112.Tecnocraft.Launcher.gui.swing.GuiFirstTimeInit;
 
 public class Bootstrap {
 
@@ -87,6 +87,7 @@ public class Bootstrap {
 
     public void startLauncher() {
         final File workingDir = Util.getWorkingDirectory("Tecnocraft");
+        System.setProperty("tecnocraft.home", workingDir.getAbsolutePath());
         final GuiFirstTimeInit guiFirstTimeInit = new GuiFirstTimeInit();
         guiFirstTimeInit.start();
         workingDir.mkdirs();
@@ -113,12 +114,12 @@ public class Bootstrap {
         if (localLauncherVersion < remoteLauncherVersion) {
             guiFirstTimeInit.setVisible(true);
             guiFirstTimeInit.setStatus("Downloading natives...");
-            this.downloadFile("http://download.tfsthiago1112.net/tecnocraft/launcher/latest/launcher-natives.zip", launcherNatives);
+            this.downloadFile("http://download.tfsthiago1112.net/tecnocraft/launcher-natives.zip", launcherNatives);
             guiFirstTimeInit.setStatus("Extracting natives...");
             final UnZip unzip = new UnZip();
             unzip.unZipIt(launcherNatives, launcherNativesDir);
             guiFirstTimeInit.setStatus("Downloading launcher...");
-            this.downloadFile("http://download.tfsthiago1112.net/tecnocraft/launcher/latest/launcher.jar", launcherJar);
+            this.downloadFile("http://download.tfsthiago1112.net/tecnocraft/launcher.jar", launcherJar);
             this.updateLocalVersion(remoteLauncherVersion);
         }
         System.out.println("Starting launcher.");
